@@ -2,23 +2,24 @@ from colorfield.fields import ColorField
 from django.contrib.auth import get_user_model
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
- 
+
 User = get_user_model()
 # Create your models here.
 
+
 class Recipe(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE,
-                               related_name = 'recipes',
-                               verbose_name = 'Автор',)
-    name = models.CharField(max_length=100, 
+                               related_name='recipes',
+                               verbose_name='Автор',)
+    name = models.CharField(max_length=100,
                             verbose_name='Название рецепта',
                             help_text='Не больше 100 символов')
-    image = models.ImageField(upload_to='media/', 
+    image = models.ImageField(upload_to='media/',
                               verbose_name='Изображение')
-    text = models.CharField(max_length=500, 
+    text = models.CharField(max_length=500,
                             verbose_name='Ваш рецепт',
                             help_text='Не большое 500 символов')
-    ingredients = models.ManyToManyField('Ingredient', 
+    ingredients = models.ManyToManyField('Ingredient',
                                          through='IngredientAmount',
                                          related_name='recipes',
                                          verbose_name='Ингредиенты')
@@ -46,22 +47,20 @@ class Recipe(models.Model):
     def __str__(self):
         return self.name
 
-    def __str__(self):
-        return self.name
-
 
 class Ingredient(models.Model):
-    name = models.CharField(max_length=100, 
+    name = models.CharField(max_length=100,
                             verbose_name='Название')
     measurement_unit = models.CharField(max_length=10,
                                         verbose_name='Единицы измерения')
-    
+
     class Meta:
         verbose_name = 'Ингредиент'
         verbose_name_plural = 'Ингредиенты'
 
     def __str__(self):
         return self.name
+
 
 class IngredientAmount(models.Model):
     ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE,
@@ -76,9 +75,12 @@ class IngredientAmount(models.Model):
                 1, 'Количество ингредиентов не может быть меньше 1!'
             ),
             MaxValueValidator(
-                1000, 'Количество ингредиентов не может быть больше 1000!')],
-            default=1,
-            verbose_name='Количество')
+                1000, 'Количество ингредиентов не может быть больше 1000!'
+            )
+        ],
+        default=1,
+        verbose_name='Количество',
+    )
 
     class Meta:
         verbose_name = 'Количество ингредиентов'
@@ -109,10 +111,10 @@ class Subscription(models.Model):
         verbose_name_plural = 'Избранные авторы'
         constraints = [
             models.UniqueConstraint(
-            fields=['user', 'author'], name='unique_relationships'),
+                fields=['user', 'author'], name='unique_relationships'),
             models.CheckConstraint(
-            name='prevent_self_follow',
-            check=~models.Q(user=models.F('author')))]
+                name='prevent_self_follow',
+                check=~models.Q(user=models.F('author')))]
 
     def __str__(self):
         return f'{self.user} {self.author}'
