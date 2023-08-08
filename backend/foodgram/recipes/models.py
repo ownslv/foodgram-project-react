@@ -18,7 +18,7 @@ class Recipe(models.Model):
                               verbose_name='Изображение')
     text = models.CharField(max_length=500,
                             verbose_name='Ваш рецепт',
-                            help_text='Не большое 500 символов')
+                            help_text='Не больше 500 символов')
     ingredients = models.ManyToManyField('Ingredient',
                                          through='IngredientAmount',
                                          related_name='recipes',

@@ -175,7 +175,7 @@ class RecipePostSerializer(serializers.ModelSerializer):
             recipe.tags.add(tag)
             recipe.save()
         for ingredient in ingredients:
-            IngredientAmount.objects.create(
+            IngredientAmount.objects.bulk_create(
                 ingredient_id=ingredient.get('id'),
                 amount=ingredient.get('amount'),
                 recipe=recipe

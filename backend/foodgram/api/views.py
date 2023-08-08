@@ -92,7 +92,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     def post_del_recipe(self, request, pk, database):
         recipe = get_object_or_404(Recipe, id=pk)
         if request.method == 'POST':
-            if not database.objects.filter(
+            if not database.objects.get_or_create(
                     user=self.request.user,
                     recipe=recipe).exists():
                 database.objects.create(
@@ -151,7 +151,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
                     recipe=purchase.recipe.id
                 )
                 for r in ingredients:
-                    i = Ingredient.objects.get(pk=r.ingredient.id)
+                    i = Ingredient.objects.prefetch_related(pk=r.ingredient.id)
                     point_name = f'{i.name} ({i.measurement_unit})'
                     if point_name in shop_cart.keys():
                         shop_cart[point_name] += r.amount
