@@ -61,7 +61,11 @@ class SubscriptionSerializer(serializers.ModelSerializer):
         recipes_limit = request.GET.get('recipes_limit')
         recipes = Recipe.objects.filter(author=obj.author)
         if recipes_limit:
-            recipes = recipes[:int(recipes_limit)]
+            try:
+                recipes = recipes[:int(recipes_limit)]
+            except ValueError:
+                raise serializers.ValidationError({
+                    'errors': 'recipes_limit должен быть числом'})
         serializer = SubscribeRecipeSerializer(recipes, many=True)
         return serializer.data
 

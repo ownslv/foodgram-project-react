@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'djoser',
     'colorfield',
     'corsheaders',
+    'import_export',
 ]
 
 MIDDLEWARE = [

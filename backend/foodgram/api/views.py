@@ -19,6 +19,9 @@ from .serializers import (CustomUserSerializer, IngredientSerializer,
                           TagSerializer)
 
 
+SHOPPING_LIST = 'shopping-list.txt'
+
+
 class UsersViewSet(UserViewSet):
     queryset = User.objects.all()
     serializer_class = CustomUserSerializer
@@ -143,7 +146,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     def download_shopping_cart(self, request):
         user = request.user
         purchases = ShoppingCart.objects.filter(user=user)
-        file = 'shopping-list.txt'
+        file = SHOPPING_LIST
         with open(file, 'w') as f:
             shop_cart = dict()
             for purchase in purchases:
@@ -151,7 +154,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
                     recipe=purchase.recipe.id
                 )
                 for r in ingredients:
-                    i = Ingredient.objects.prefetch_related(pk=r.ingredient.id)
+                    i = Recipe.objects.prefetch_related('ingredients')
                     point_name = f'{i.name} ({i.measurement_unit})'
                     if point_name in shop_cart.keys():
                         shop_cart[point_name] += r.amount
