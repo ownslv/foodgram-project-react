@@ -1,11 +1,15 @@
 from django.contrib import admin
-
-from .models import Ingredient, Recipe, Tag
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
 
+from .models import Ingredient, IngredientAmount, Recipe, Tag
 
-@admin.register(Recipe)
+
+class IngredientAmountInline(admin.TabularInline):
+    model = IngredientAmount
+    extra = 1
+
+
 class RecipeAdmin(admin.ModelAdmin):
     list_display = (
         'pk',
@@ -13,6 +17,7 @@ class RecipeAdmin(admin.ModelAdmin):
         'author',
     )
     list_filter = ('author', 'name', 'tags',)
+    inlines = (IngredientAmountInline,)
 
 
 class IngredientResource(resources.ModelResource):
@@ -21,7 +26,7 @@ class IngredientResource(resources.ModelResource):
         model = Ingredient
 
 
-class IngredientAdmin(ImportExportModelAdmin):
+class IngredientAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     resource_classes = [IngredientResource]
     list_display = (
         'name',
@@ -29,8 +34,9 @@ class IngredientAdmin(ImportExportModelAdmin):
     )
     search_fields = ('name',)
     list_filter = ('measurement_unit',)
+    inlines = (IngredientAmountInline,)
 
 
 admin.site.register(Tag)
-
 admin.site.register(Ingredient, IngredientAdmin)
+admin.site.register(Recipe, RecipeAdmin)
