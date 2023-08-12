@@ -1,11 +1,10 @@
 version: '3.3'
 services:
   db:
-    image: postgres:13.0-alpine
+    image: postgres:13
     volumes:
-      - /var/lib/postgresql/data/
-    env_file:
-      - ./.env
+      - pg_foodgram_data:/var/lib/postgresql/data
+    env_file: .env
 
   backend:
     image: vzangiev/foodgram_backend
@@ -41,6 +40,6 @@ services:
     restart: always
 
 volumes:
-  postgres_data:
+  pg_foodgram_data:
   static_value:
   media_value:
