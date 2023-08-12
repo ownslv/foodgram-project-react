@@ -187,3 +187,4 @@ DJOSER = {
 }
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+CSRF_TRUSTED_ORIGINS=["https://owninglnk2.ddns.net"]
