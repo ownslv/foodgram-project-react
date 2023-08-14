@@ -47,6 +47,16 @@ class Recipe(models.Model):
         verbose_name='Время приготовления',
         help_text='Время приготовления в минутах',
     )
+    cart = models.ManyToManyField(
+        verbose_name='Список покупок',
+        related_name='carts',
+        to=User,
+    )
+    favorite = models.ManyToManyField(
+        verbose_name='Понравившиеся рецепты',
+        related_name='favorites',
+        to=User,
+    )
     pub_date = models.DateTimeField(
         auto_now_add=True,
         verbose_name='Дата создания рецепта',
