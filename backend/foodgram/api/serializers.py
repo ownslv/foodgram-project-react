@@ -138,7 +138,7 @@ class IngredientAmountSerializer(serializers.ModelSerializer):
     amount = serializers.IntegerField(write_only=True)
 
     class Meta:
-        model = IngredientAmount
+        model = Ingredient
         fields = ('id', 'amount')
 
 
@@ -179,10 +179,10 @@ class RecipePostSerializer(serializers.ModelSerializer):
             recipe.tags.add(tag)
             recipe.save()
         for ingredient in ingredients:
-            IngredientAmount.objects.bulk_create(
+            IngredientAmount.objects.create(
+                recipe=recipe,
                 ingredient_id=ingredient.get('id'),
                 amount=ingredient.get('amount'),
-                recipe=recipe
             )
         return recipe
 
