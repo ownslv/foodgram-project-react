@@ -1,15 +1,24 @@
-from django.contrib import admin
+from django.contrib.admin import register
+from django.contrib.auth.admin import UserAdmin
 
 from .models import User
 
 
-@admin.register(User)
-class UserAdmin(admin.ModelAdmin):
+@register(User)
+class MyUserAdmin(UserAdmin):
     list_display = (
-        'pk',
-        'username',
-        'first_name',
-        'last_name',
-        'email',
+        'username', 'first_name', 'last_name', 'email',
     )
-    list_filter = ('username', 'email',)
+    fields = (
+        ('username', 'email', ),
+        ('first_name', 'last_name', ),
+    )
+    fieldsets = []
+
+    search_fields = (
+        'username', 'email',
+    )
+    list_filter = (
+        'first_name', 'email',
+    )
+    save_on_top = True

@@ -1,42 +1,77 @@
-from django.contrib import admin
-from import_export import resources
-from import_export.admin import ImportExportModelAdmin
+from django.contrib.admin import ModelAdmin, TabularInline, register, site
+from django.utils.safestring import mark_safe
 
-from .models import Ingredient, IngredientAmount, Recipe, Tag
+from .models import AmountIngredient, Ingredient, Recipe, Tag
 
-
-class IngredientAmountInline(admin.TabularInline):
-    model = IngredientAmount
-    extra = 1
+site.site_header = 'Администрирование Foodgram'
+EMPTY_VALUE_DISPLAY = 'Значение не указано'
 
 
-class RecipeAdmin(admin.ModelAdmin):
+class IngredientInline(TabularInline):
+    model = AmountIngredient
+    extra = 2
+
+
+@register(AmountIngredient)
+class LinksAdmin(ModelAdmin):
+    pass
+
+
+@register(Ingredient)
+class IngredientAdmin(ModelAdmin):
     list_display = (
-        'pk',
+        'name', 'measurement_unit',
+    )
+    search_fields = (
+        'name',
+    )
+    list_filter = (
+        'name',
+    )
+
+    save_on_top = True
+    empty_value_display = EMPTY_VALUE_DISPLAY
+
+
+@register(Recipe)
+class RecipeAdmin(ModelAdmin):
+    list_display = (
         'name',
         'author',
+        'get_image',
     )
-    list_filter = ('author', 'name', 'tags',)
-    inlines = (IngredientAmountInline,)
+    fields = (
+        ('name', 'cooking_time',),
+        ('author', 'tags',),
+        ('text',),
+        ('image',),
+    )
+    raw_id_fields = ('author', )
+    search_fields = (
+        'name', 'author', 'tags'
+    )
+    list_filter = (
+        'name', 'author__username', 'tags',
+    )
+
+    inlines = (IngredientInline,)
+    save_on_top = True
+    empty_value_display = EMPTY_VALUE_DISPLAY
+
+    def get_image(self, obj):
+        return mark_safe(f'<img src={obj.image.url} width="80" hieght="30"')
+
+    get_image.short_description = 'Изображение'
 
 
-class IngredientResource(resources.ModelResource):
-
-    class Meta:
-        model = Ingredient
-
-
-class IngredientAdmin(ImportExportModelAdmin, admin.ModelAdmin):
-    resource_classes = [IngredientResource]
+@register(Tag)
+class TagAdmin(ModelAdmin):
     list_display = (
-        'name',
-        'measurement_unit',
+        'name', 'color', 'slug',
     )
-    search_fields = ('name',)
-    list_filter = ('measurement_unit',)
-    inlines = (IngredientAmountInline,)
+    search_fields = (
+        'name', 'color'
+    )
 
-
-admin.site.register(Tag)
-admin.site.register(Ingredient, IngredientAdmin)
-admin.site.register(Recipe, RecipeAdmin)
+    save_on_top = True
+    empty_value_display = EMPTY_VALUE_DISPLAY
