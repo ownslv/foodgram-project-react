@@ -201,7 +201,7 @@ class Recipe(Model):
     )
     image = ImageField(
         verbose_name='Изображение блюда',
-        upload_to='recipe_images/',
+        upload_to='recipe/images/',
     )
     text = TextField(
         verbose_name='Описание блюда',
