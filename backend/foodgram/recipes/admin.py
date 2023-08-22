@@ -1,8 +1,8 @@
 from django.contrib.admin import ModelAdmin, TabularInline, register, site
 from django.utils.safestring import mark_safe
-
+from import_export.admin import ImportExportModelAdmin
 from .models import AmountIngredient, Ingredient, Recipe, Tag
-
+from import_export import resources
 site.site_header = 'Администрирование Foodgram'
 EMPTY_VALUE_DISPLAY = 'Значение не указано'
 
@@ -17,8 +17,15 @@ class LinksAdmin(ModelAdmin):
     pass
 
 
+class IngredientResource(resources.ModelResource):
+
+    class Meta:
+        model = Ingredient
+
+
 @register(Ingredient)
-class IngredientAdmin(ModelAdmin):
+class IngredientAdmin(ImportExportModelAdmin, ModelAdmin):
+    resource_classes = [IngredientResource]
     list_display = (
         'name', 'measurement_unit',
     )
