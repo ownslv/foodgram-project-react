@@ -24,7 +24,7 @@ from django.db.models import (CASCADE, CharField, CheckConstraint,
 from django.db.models.functions import Length
 
 from users.models import User
-from colorfield.fields import ColorField
+
 
 CharField.register_lookup(Length)
 
