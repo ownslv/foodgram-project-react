@@ -8,7 +8,7 @@ from django.utils.deconstruct import deconstructible
 class OneOfTwoValidator:
     first_regex = '[^а-яёА-ЯЁ]+'
     second_regex = '[^a-zA-Z]+'
-    message = ('"Имя пользователя" только на одном языке, без символов') 
+    message = ('"Имя пользователя" только на одном языке, без символов')
 
     def __init__(self, first_regex=None, second_regex=None, message=None):
         if first_regex is not None:
