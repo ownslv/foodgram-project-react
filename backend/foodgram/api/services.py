@@ -54,12 +54,15 @@ def check_value_validate(value, klass=None):
             Объекта с указанным id не существует.
 
     """
-    if int(value) <= 0:
-        raise ValidationError('Кол-во ингредиентов не может быть меньше 1')
+    value_str = str(value)
+    print(type(value))
     if not str(value).isdecimal():
-        raise ValidationError(
-            f'{value} должно содержать цифру'
-        )
+        raise ValidationError('Кол-во только целое число, не меньше 1')
+    elif int(value) <= 0:
+        raise ValidationError('Кол-во только целое число, не меньше 1')
+    elif not value_str.isdigit():
+        raise ValidationError('Кол-во только целое число, не меньше 1')
+
     if klass:
         obj = klass.objects.filter(id=value)
         if not obj:
