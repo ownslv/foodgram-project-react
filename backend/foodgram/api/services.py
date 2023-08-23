@@ -55,7 +55,6 @@ def check_value_validate(value, klass=None):
 
     """
     value_str = str(value)
-    print(type(value))
     if not str(value).isdecimal():
         raise ValidationError('Кол-во только целое число, не меньше 1')
     elif int(value) <= 0:
